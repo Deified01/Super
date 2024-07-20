@@ -35,7 +35,7 @@ def extract_loss_amount(message):
         return None
 
 # Define a variable to store the current balance
-balance = 300000000
+balance = 500000000
 balance_lock = threading.Lock()
 
 # Define an event handler to process incoming messages
