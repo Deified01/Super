@@ -4,7 +4,8 @@ import re
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 from flask import Flask
-import threading 
+import threading
+
 # Set API ID, API hash, and session string
 api_id = int(os.environ['id'])
 api_hash = os.environ['hash']
@@ -85,6 +86,11 @@ async def main():
         send_lever_command()
     )
 
-if __name__ == '__main__':
+def run_flask_app():
     app.run(debug=True)
+
+if __name__ == '__main__':
+    flask_thread = threading.Thread(target=run_flask_app)
+    flask_thread.daemon = True
+    flask_thread.start()
     client.loop.run_until_complete(main())
