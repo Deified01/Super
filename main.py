@@ -3,22 +3,8 @@ import os
 import re
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
-from flask import Flask
-import threading 
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return 'Hello, World!'
-
-def run_flask_app():
-    app.run(host='0.0.0.0', port=10000)
-
+import threading
 # Set API ID, API hash, and session string
-"""os.environ['id'] 
-os.environ['hash']
-os.environ['string']"""
-
 api_id = int(os.environ['id'])
 api_hash = os.environ['hash']
 session_str = os.environ['string']
@@ -32,7 +18,7 @@ client.start()
 # Define the functions to extract win/loss amounts
 def extract_win_amount(message):
     pattern = r'You won ₩(\d+)'
-    match = re.search(pattern, re.escape(message).replace(' ', '\ '))
+    match = re.search(pattern, message.replace(' ', '\ '))
     if match:
         return int(match.group(1))
     else:
@@ -40,7 +26,7 @@ def extract_win_amount(message):
 
 def extract_loss_amount(message):
     pattern = r'You lost ₩(\d+)'
-    match = re.search(pattern, re.escape(message).replace(' ', '\ '))
+    match = re.search(pattern, message.replace(' ', '\ '))
     if match:
         return int(match.group(1))
     else:
@@ -83,9 +69,10 @@ async def send_lever_command():
             await asyncio.sleep(10)  # wait 10 seconds before retrying
 
 # Run the client and send the lever command
-if __name__ == "__main__":
-    flask_thread = threading.Thread(target=run_flask_app)
-    flask_thread.daemon = True
-    flask_thread.start()
-    client.loop.create_task(send_lever_command())
-    client.run_until_disconnected()
+async def main():
+    await asyncio.gather(
+        client.disconnected,
+        send_lever_command()
+    )
+
+client.loop.run_until_complete(main())
