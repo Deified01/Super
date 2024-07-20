@@ -32,7 +32,7 @@ client.start()
 # Define the functions to extract win/loss amounts
 def extract_win_amount(message):
     pattern = r'You won ₩(\d+)'
-    match = re.search(pattern, message.replace(' ', '\ '))
+    match = re.search(pattern, re.escape(message).replace(' ', '\ '))
     if match:
         return int(match.group(1))
     else:
@@ -40,7 +40,7 @@ def extract_win_amount(message):
 
 def extract_loss_amount(message):
     pattern = r'You lost ₩(\d+)'
-    match = re.search(pattern, message.replace(' ', '\ '))
+    match = re.search(pattern, re.escape(message).replace(' ', '\ '))
     if match:
         return int(match.group(1))
     else:
@@ -88,4 +88,4 @@ if __name__ == "__main__":
     flask_thread.daemon = True
     flask_thread.start()
     client.loop.create_task(send_lever_command())
-    client.run_until_disconnected()￼Enter
+    client.run_until_disconnected()
