@@ -19,16 +19,16 @@ client.start()
 
 # Define the functions to extract win/loss amounts
 def extract_win_amount(message):
-    pattern = r'You won ₩' + re.escape('*') + r'(\d+)' + re.escape(',')
-    match = re.search(pattern, message.replace(' ', '\ '))
+    pattern = r'Two signs came out equal!\nYou won ₩(\d+)'
+    match = re.search(pattern, message)
     if match:
         return int(match.group(1))
     else:
         return None
 
 def extract_loss_amount(message):
-    pattern = r'You lost ₩' + re.escape('*') + r'(\d+)' + re.escape(',')
-    match = re.search(pattern, message.replace(' ', '\ '))
+    pattern = r'Nothing got matched!\nYou lost ₩(\d+)'
+    match = re.search(pattern, message)
     if match:
         return int(match.group(1))
     else:
